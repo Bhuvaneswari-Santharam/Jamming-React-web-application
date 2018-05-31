@@ -20,6 +20,20 @@ class Track extends Component{
 
   
   render(){
+    const style = {
+      visibility: 'hidden'
+    }
+    const style1 = {
+      visibility: 'show'
+    }
+    
+    if(this.props.isRemoval){
+      style.visibility = 'hidden';
+      style1.visibility = 'show';
+    }else{
+      style1.visibility = 'hidden';
+      style.visibility='show'
+    }
     return(
       <div className="Track">
       <div className="Track-information">
