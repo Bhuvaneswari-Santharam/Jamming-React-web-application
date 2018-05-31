@@ -121,49 +121,86 @@ var Spotify={};
        if((name == '')||(listOfUri == '')){
            return;
        }else{
-           var accessTkn = accessToken;
+           if((accessToken == '')||(accessToken == null)){
+               Spotify.getAccessToken();
+           }
+           var accessTkn = accessToken[1];
            var userId = '';
            var playlistId = '';
+           var temp_uris = 'spotify:track:';
+           var uris = listOfUri.map((eachUri)=>{
+                return(temp_uris+eachUri.id);
+           });
+           console.log("uris:" + uris);
            var hdr = {
             Authorization: `Bearer ${accessTkn}`} ;
            fetch('https://api.spotify.com/v1/me',{
                headers: hdr}
             ).then(response =>{
                 if(response.ok){
-                    return response.json();
+                    response.json().then(data => {
+                        userId = data.id;
+                        console.log("user id"+ userId);
+                        console.log("entering to get playlist id");
+                        fetch('https://api.spotify.com/v1/users/'+userId+'/playlists',{
+                            headers:{
+                                Authorization: `Bearer ${accessTkn}`,
+                                'Content-Type': 'application/json'
+                            },
+                            method:'POST',
+                            body: JSON.stringify({name})
+                        }).then(response =>{
+                            if(response.ok){
+                                response.json().then(data=>{
+                                    playlistId = data.id;
+                                    console.log('got playlist id');
+                                    if((playlistId!='')&&(playlistId!=null)){
+                                        //var url1 = 'https://api.spotify.com/v1/users/'+userId+'/playlists/'+playlistId+'/tracks';
+                                        fetch('https://api.spotify.com/v1/users/'+userId+'/playlists/'+playlistId+'/tracks',{
+                                            headers:{
+                                                Authorization: `Bearer ${accessTkn}`,
+                                                'Content-Type': 'application/json'
+                                            },
+                                            method:'POST',
+                                            body: JSON.stringify({uris})
+                                 
+                                        }).then(response=>{
+                                             if(response.ok){
+                                                 console.log("playlist save");
+                                                 this.setState({
+                                                     playlistName: '',
+                                                     playlistTrack: []
+                                                   });
+                                             }else{
+                                                 console.log('Network request for '+name + 'failed'+ response.status+':'+ response.statusText);
+                                             }
+                                        })
+                                     } 
+
+                                })
+                            }
+                            else{
+                                console.log('Network request for '+name + 'failed'+ response.status+':'+ response.statusText); 
+                            }
+                        })
+
+                    })
                 }
-            }).then (jsonResonse =>{
-                userId = jsonResonse.id;
-            }) 
-           
-        fetch('https://api.spotify.com/v1/users/{user_id}/playlists',{
-            headers:{
-                Authorization: `Bearer ${accessTkn}`,
-                'Content-Type': 'application/json'
-            },
-            method:'POST',
-            body: JSON.stringify({name})
-        }).then(response =>{
-            if(response.ok){
-                return response.json();
-            }
-        }).then(jsonResponse =>{
-            playlistId = jsonResponse.id;
-        })
-       var url1 = 'https://api.spotify.com/v1/users/{userId}/playlists/{playlistId}/tracks'
-       fetch(url1,{
-           headers:{
-               Authorization: `Bearer ${accessTkn}`,
-               'Content-Type': 'application/json'
-           },
-           method:'POST',
-           body: JSON.stringify({listOfUri})
+                else{
+                    console.log('Network request for '+name + 'failed'+ response.status+':'+ response.statusText);
+                }
+            })
 
-       })
+        //if((userId != '')&&(userId != null)&&(accessTkn!= '')&&(accessTkn!= null)){
+         
+         
+        
+        
 
-    }
-
-       };
+   // }
+}
+   };
+       
    
 
 
