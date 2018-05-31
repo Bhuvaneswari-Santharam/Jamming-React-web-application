@@ -16,12 +16,12 @@ class App extends Component {
       album: '',
       id: ''
     }],
-    playlistName: 'playlistname',
+    playlistName: '',
     playlistTrack: [{
-      name: 'Name',
-      album: 'Album',
-      artist: 'Artist',
-      id: 'id'
+      name: '',
+      album: '',
+      artist: '',
+      id: ''
     }],
     
   }
@@ -52,15 +52,15 @@ class App extends Component {
   }
 
   updatePlaylistName = (name) =>{
-    var newName = this.state.playlistName;
-    newName = name;
+   
+    var newName = name;
     this.setState({playlistName: newName});
   }
   
   savePlayList = ( newplaylist) =>{
      Spotify.savePlaylist(newplaylist);
      this.setState({
-       playlist: 'New PlayList',
+       playlist: '',
        playListTrack: []
      });
   }
@@ -70,8 +70,6 @@ class App extends Component {
     
     this.setState({srchRes: Spotify.search(newItem)});
      console.log('exit search'); 
-       
-       
     
   }
   
