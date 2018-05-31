@@ -9,8 +9,8 @@ class playlist extends Component{
     this.handleNameChange = this.handleNameChange.bind(this);
   }
 
-onSave(){
-  this.props.onSave();
+onSave1(){
+  this.props.onSave(this.props.listname,this.props.playlist);
 }
 
 onRemove(){
@@ -26,9 +26,9 @@ render(){
    
         return(
             <div className="Playlist">
-            <input value={'New Playlist'} onChange = {this.handleNameChange}/>
+            <input placeholder="New Playlist" onChange = {this.handleNameChange} value={this.props.listname}/>
             <TrackList tracks = {this.props.playlist } onRemove = {this.props.onRemove} isRemoval = {true}/>
-            <a className="Playlist-save" onClick = {this.onSave}>SAVE TO SPOTIFY</a>
+            <a className="Playlist-save" onClick = {this.onSave1}>SAVE TO SPOTIFY</a>
           </div>
 
 
