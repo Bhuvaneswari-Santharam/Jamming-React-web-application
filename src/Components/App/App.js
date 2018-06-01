@@ -18,10 +18,7 @@ class App extends Component {
     }],
     playlistName: '',
     playlistTrack: [{
-      name: '',
-      album: '',
-      artist: '',
-      id: ''
+      
     }],
     
   }
